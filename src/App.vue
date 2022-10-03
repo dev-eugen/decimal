@@ -54,7 +54,7 @@
           <b-link href="https://t.me/jonya5">Хочу покращити аплікацію</b-link>
         </div>
         <div>
-          <b-link href="https://t.me/jonya5">GITHUB</b-link>
+          <b-link href="https://github.com/dev-eugen/decimal">GITHUB</b-link>
         </div>
         <div>Автори:</div>
         <div>
