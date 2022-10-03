@@ -68,6 +68,7 @@
 </template>
 
 <script>
+/*eslint-disable */
 import { ref } from 'vue';
 export default {
   name: 'App',

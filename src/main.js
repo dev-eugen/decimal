@@ -1,3 +1,4 @@
+/*eslint-disable */
 import { createApp } from 'vue';
 import BootstrapVue3 from 'bootstrap-vue-3';
 import 'bootstrap/dist/css/bootstrap.css';
