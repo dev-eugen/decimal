@@ -47,7 +47,11 @@
         ]"
       >
       </b-form-select>
-      <BButton @click="handle" class="w-100" variant="primary"
+      <BButton
+        :disabled="!value"
+        @click="handle"
+        class="w-100"
+        variant="primary"
         >Показать</BButton
       >
     </div>
