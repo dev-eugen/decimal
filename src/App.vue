@@ -1,12 +1,37 @@
 <template>
   <div id="app">
-    <h2 class="m-1">Конвертер перекладу систем числення онлайн</h2>
+    <h2 class="m-1" style="margin-bottom: 20px">
+      Конвертер перекладу систем числення онлайн
+    </h2>
     <div class="d-grid gap-3">
+      <h6 style="margin-bottom: -13px">Число:</h6>
       <b-form-input
         v-model="value"
         placeholder="Вихідні дані (десяткова система)"
         :type="'number'"
       ></b-form-input>
+      <h6 style="margin-bottom: -13px">Початковий система:</h6>
+      <b-form-select
+        placeholder="Підстава результату"
+        v-model="source_system"
+        :options="[
+          {
+            value: false,
+            text: 'Десятична',
+          },
+          {
+            value: 2,
+            text: 'Двійкова',
+          },
+          {
+            value: 8,
+            text: 'Вісімкова',
+          },
+        ]"
+      >
+      </b-form-select>
+
+      <h6 style="margin-bottom: -13px">Очікувана система:</h6>
       <b-form-select
         placeholder="Підстава результату"
         v-model="system"
@@ -27,12 +52,16 @@
       >
     </div>
     <div class="border-top mt-2">
-      <b-alert v-if="result" show>
-        {{ value }} (10) = {{ result }} ({{ system }})
-      </b-alert>
-
       <div v-if="result">
         <h1 v-if="result">Рішення</h1>
+        <b-alert show v-if="convert_deciding.length">
+          {{ value }} ({{ source_system }}) =
+          <span v-for="(c, i) in convert_deciding" :key="i">
+            <span v-if="i > 0"> + </span>
+            {{ c.val }} * {{ c.system }}^{{ c.pow }}
+          </span>
+          = {{ value_converted }}
+        </b-alert>
         <div v-for="(d, i) in decide" :key="i" class="m-2">
           <table>
             <tr>
@@ -49,6 +78,12 @@
           </table>
         </div>
       </div>
+
+      <b-alert v-if="result" show>
+        <h6>Відповідь:</h6>
+        {{ value_converted }} (10) = {{ result }} ({{ system }})
+      </b-alert>
+
       <div>
         <div>
           <b-link href="https://t.me/jonya5">Хочу покращити аплікацію</b-link>
@@ -74,15 +109,46 @@ export default {
   name: 'App',
   setup() {
     const value = ref(null);
+    const value_converted = ref(null);
     const system = ref(2);
+    const source_system = ref(false);
 
     const result = ref(null);
     const decide = ref([]);
+    const convert_deciding = ref([]);
 
     const handle = () => {
+      convert_deciding.value = [];
+      let ready_dd = 0;
+
+      if (source_system.value) {
+        let val = new String(value.value).split('');
+
+        let i = val.length - 1;
+        val.forEach((e) => {
+          convert_deciding.value.push({
+            val: e,
+            system: source_system.value,
+            pow: i,
+          });
+
+          ready_dd += new Number(
+            new Number(e) * Math.pow(source_system.value, i)
+          );
+
+          i--;
+        });
+
+        value_converted.value = ready_dd;
+      }
+
+      console.log(convert_deciding.value);
+
+      // convert.value =
+
       result.value = [];
       decide.value = [];
-      let counter = value.value;
+      let counter = source_system.value ? ready_dd : value.value;
       let del = system.value;
 
       while (counter >= del) {
@@ -115,6 +181,9 @@ export default {
       handle,
       decide,
       result,
+      source_system,
+      convert_deciding,
+      value_converted,
     };
   },
 };
